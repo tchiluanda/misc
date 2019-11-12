@@ -1,0 +1,139 @@
+<HAScript name="atualizaUO" description="" timeout="60000" pausetime="300" promptall="true" blockinput="false" author="tiago.pereira" creationdate="06/11/2019 17:35:34" supressclearevents="false" usevars="true" ignorepauseforenhancedtn="true" delayifnotenhancedtn="0" ignorepausetimeforenhancedtn="true">
+
+<!--value="[a-z]-->
+
+    <vars>
+        <create name="$intQdeSucessos$" type="integer" value="0" />
+        <create name="$intQdeFalhas$" type="integer" value="0" />
+        <create name="$intQdeExistentes$" type="integer" value="0" />
+        <create name="$intQdePastes$" type="integer" value="0" />
+        <create name="$intTotalUOs$" type="integer" value="0" />
+        <create name="$intTotalCelulas$" type="integer" value="0" />
+        <create name="$FlagInicio$" type="boolean" value="true" />
+    </vars>
+
+    <screen name="Entrada" entryscreen="true" exitscreen="false" transient="false">
+        <description >
+            <oia status="NOTINHIBITED" optional="false" invertmatch="false" />
+        </description>
+        <actions>
+            <prompt name="'Qde'" row="1" col="1" len="3" description="'Informe a quantidade de UOs...'"
+                    default="0" clearfield="true" encrypted="false"
+                    assigntovar="$intTotalUOs$" varupdateonly="true" required="true"/> 
+            <varupdate name="$intTotalCelulas$" value="$intTotalUOs$ * 2" />
+        </actions>
+        <nextscreens timeout="0" >
+            <nextscreen name="Inicial" />
+        </nextscreens>
+    </screen>
+
+    <screen name="Inicial" entryscreen="false" exitscreen="false" transient="false">
+        <description >
+            <oia status="NOTINHIBITED" optional="false" invertmatch="false" />
+            <condition value="$intQdePastes$ &lt; $intTotalCelulas$" optional="false" invertmatch="false" />
+            <string value="'TABADM-UO-ATUUO (ATUALIZA UO)'" row="1" col="18" erow="1" ecol="46" casesense="false" wrap="false" optional="false" invertmatch="false" />
+            <string value="'UO                : _____'" row="6" col="3" erow="6" ecol="27" casesense="false" wrap="false" optional="false" invertmatch="false" />
+        </description>
+        <actions>
+            <!--<message title="'Status'" value="'inicial'" />-->
+			<if condition = "$FlagInicio$ == true">
+                <input value="'[paste][enter]'" row="0" col="0" movecursor="true" xlatehostkeys="true" encrypted="false" />
+				<varupdate name="$FlagInicio$" value="false" />
+				<varupdate name="$intQdePastes$" value="$intQdePastes$ + 1" />
+			</if>
+			<else>
+				<input value="'[pastenext][enter]'" row="0" col="0" movecursor="true" xlatehostkeys="true" encrypted="false" />
+                <varupdate name="$intQdePastes$" value="$intQdePastes$ + 1" />
+			</else>
+
+        </actions>
+        <nextscreens timeout="0" >
+            <nextscreen name="DetalhesUO" />
+            <nextscreen name="DetalhesUOExistente" />
+        </nextscreens>
+    </screen>
+
+    <screen name="DetalhesUOExistente" entryscreen="false" exitscreen="false" transient="false">
+        <description >
+            <oia status="NOTINHIBITED" optional="false" invertmatch="false" />
+            <string value="'OPCAO             : _ ( A-ALTERACAO E-EXCLUSAO )'" row="4" col="3" erow="4" ecol="50" casesense="false" wrap="false" optional="false" invertmatch="false" />
+        </description>
+        <actions>
+            <!--<message title="'Status'" value="'uo existente'" />-->
+            <input value="'[pastenext]'" row="0" col="0" movecursor="true" xlatehostkeys="true" encrypted="false" />
+            <varupdate name="$intQdePastes$" value="$intQdePastes$ + 1" />
+            <input value="'[pf12]'" row="0" col="0" movecursor="true" xlatehostkeys="true" encrypted="false" />
+            <varupdate name="$intQdeExistentes$" value="$intQdeExistentes$ + 1" />
+        </actions>
+        <nextscreens timeout="0" >
+            <nextscreen name="Inicial" />
+            <nextscreen name="Fim" />
+        </nextscreens>
+    </screen>
+
+    <screen name="DetalhesUO" entryscreen="false" exitscreen="false" transient="false">
+        <description >
+            <oia status="NOTINHIBITED" optional="false" invertmatch="false" />
+            <string value="'OPCAO             : I INCLUSAO'" row="4" col="3" erow="4" ecol="32" casesense="false" wrap="false" optional="false" invertmatch="false" />
+            <string value="'TITULO            : _'" row="7" col="3" erow="7" ecol="23" casesense="false" wrap="false" optional="false" invertmatch="false" />
+        </description>
+        <actions>
+            <!--<message title="'Status'" value="'nova uo, detalhes'" />-->
+            <input value="'[pastenext]'" row="0" col="0" movecursor="true" xlatehostkeys="true" encrypted="false" />
+            <varupdate name="$intQdePastes$" value="$intQdePastes$ + 1" />
+            <input value="'[enter]'" row="0" col="0" movecursor="true" xlatehostkeys="true" encrypted="false" />
+        </actions>
+        <nextscreens timeout="0" >
+            <nextscreen name="Confirma" />
+            <nextscreen name="DetalhesUOErro" />
+        </nextscreens>
+    </screen>
+
+    <screen name="DetalhesUOErro" entryscreen="false" exitscreen="false" transient="false">
+        <description >
+            <oia status="NOTINHIBITED" optional="false" invertmatch="false" />
+            <string value="'('" row="24" col="2" erow="24" ecol="2" casesense="false" wrap="false" optional="false" invertmatch="false" />
+            <string value="')'" row="24" col="7" erow="24" ecol="7" casesense="false" wrap="false" optional="false" invertmatch="false" />
+        </description>
+        <actions>
+            <!--<message title="'Status'" value="'erro nos detalhes'" />-->
+            <input value="'[pf12]'" row="0" col="0" movecursor="true" xlatehostkeys="true" encrypted="false" />
+            <varupdate name="$intQdeFalhas$" value="$intQdeFalhas$ + 1" />
+        </actions>
+        <nextscreens timeout="0" >
+            <nextscreen name="Inicial" />
+            <nextscreen name="Fim" />
+        </nextscreens>
+    </screen>
+
+    <screen name="Confirma" entryscreen="false" exitscreen="false" transient="false">
+        <description >
+            <oia status="NOTINHIBITED" optional="false" invertmatch="false" />
+            <string value="'('" row="24" col="2" erow="24" ecol="2" casesense="false" wrap="false" optional="false" invertmatch="true" />
+            <string value="')'" row="24" col="7" erow="24" ecol="7" casesense="false" wrap="false" optional="false" invertmatch="true" />
+            <string value="'CONFIRMA INCLUSAO   ? :     ( S-SIM  N-NAO  A-ALTERA )'" row="22" col="3" erow="22" ecol="56" casesense="false" wrap="false" optional="false" invertmatch="false" />
+        </description>
+        <actions>
+            <!--<message title="'Status'" value="'confirma'" />-->
+            <input value="'S[enter]'" row="0" col="0" movecursor="true" xlatehostkeys="true" encrypted="false" />
+            <varupdate name="$intQdeSucessos$" value="$intQdeSucessos$ + 1" />
+        </actions>
+        <nextscreens timeout="0" >
+            <nextscreen name="Inicial" />
+            <nextscreen name="Fim" />
+        </nextscreens>
+    </screen>
+
+    <screen name="Fim" entryscreen="false" exitscreen="true" transient="false">
+        <description >
+            <oia status="NOTINHIBITED" optional="false" invertmatch="false" />
+            <condition value="$intQdePastes$ &lt; $intTotalCelulas$" optional="false" invertmatch="true" />
+        </description>
+        <actions>
+            <message title="'Fim!'" value="'Foram ' + $intQdePastes$ + ' pastes, com ' + $intQdeFalhas$ + ' falhas, ' + $intQdeExistentes$ + ' UOs ja existentes, e ' + $intQdeSucessos$ + ' sucessos.'" />
+        </actions>
+        <nextscreens timeout="0" >
+        </nextscreens>
+    </screen>
+
+</HAScript>
