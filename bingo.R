@@ -6,8 +6,8 @@ loadfonts()
 
 qde_cartelas <- 12
 maior_numero <- 50
-dim_cartela <- c("linhas"  = 3, 
-                 "colunas" = 3)
+dim_cartela  <- c("linhas"  = 3, 
+                  "colunas" = 3)
 qde_numeros_cartela <- dim_cartela["linhas"] * dim_cartela["colunas"]
 
 
@@ -35,7 +35,7 @@ base_cartelas_ajustada <- base_cartelas %>%
 bingo <- ggplot(base_cartelas_ajustada, aes(x = x, y = -y, label = Numeros)) +
   geom_tile(width = 1, height = 1, fill = "ghostwhite", color = "darkgrey") +
   geom_text(hjust = "center", vjust = "center", family = "Roboto Slab", color = "#333333") +
-  annotate("text", x = 2, y = 0, label = "B I N G O", hjust = "center", 
+  annotate("text", x = dim_cartela["colunas"]/2 + 0.5, y = 0, label = "B I N G O", hjust = "center", 
            family = "Roboto Mono", fontface = "bold", color = "#333333") +
   facet_wrap(~Cartelas, ncol = 3) +
   theme_minimal() +
@@ -44,11 +44,7 @@ bingo <- ggplot(base_cartelas_ajustada, aes(x = x, y = -y, label = Numeros)) +
         axis.text = element_blank(),
         axis.title = element_blank(),
         strip.text = element_blank(),
-        legend.position = "none",
-        text = element_text(family = "Roboto Slab", 
-                            color = "#555555"),
-        plot.caption = element_text(color = "#333333", face = "italic"),
-        plot.title = element_text(family = "Calibri", face = "bold", hjust = "0.5"))
+        legend.position = "none")
 
 ggsave(bingo, file = "bingo.png", width = 6, height = 8, type = "cairo-png")
   
