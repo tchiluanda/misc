@@ -1,6 +1,8 @@
 library(tidyverse)
 library(sf)
 library(tidycensus)
+library(extrafont)
+loadfonts()
 
 # Config do tidycensus ----------------------------------------------------
 
@@ -55,7 +57,14 @@ ggplot() +
           color = "lightgrey", fill = 'khaki') +
   geom_sf(data = protests_ny, 
           aes(geometry = geometry, size = size, color = escalation),
-          alpha = .35) +
-  scale_size_manual(values = c('Not recorded' = 1, 'Small' = 2, 'Moderate' = 3, 'Large' = 4)) +
+          alpha = .5, fill = NA, shape = 21) + #stroke = 1) +
+  labs(size = 'Size', color = 'Escalation?', title = 'Location of George Floyd Protests in the State of NY') +
+  scale_size_manual(
+    values = c(
+      'Not recorded' = 1, 
+      'Small' = 2, 
+      'Moderate' = 4, 
+      'Large' = 8)) +
   scale_color_manual(values = c('Yes' = 'firebrick', 'No' = 'dodgerblue')) +
-  theme_void()
+  theme_void() +
+  theme(text = element_text(family = 'Lato'))
